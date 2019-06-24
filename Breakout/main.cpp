@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include "Game.h"
+#include "InputHandler.h"
 
 int main()
 {
@@ -9,40 +11,19 @@ int main()
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
+	InputHandler* inputHandler = new InputHandler();
+	Game* game = new Game(windowWidth, windowHeight);
+
 	while (window.isOpen())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			switch(event.type)
-			{
-				case sf::Event::Closed:
-					window.close();
-					break;
-				case sf::Event::GainedFocus:
-					// TODO: Unpause game
-					break;
-				case sf::Event::KeyPressed:
-					switch(event.key.code)
-					{
-						case sf::Keyboard::Space:
-							// TODO: Start game
-							break;
-						default:
-							break;
-					}
-				case sf::Event::LostFocus:
-					// TODO: Pause game
-					break;
-				default:
-					break;
-			}
-		}
-
 		window.clear();
-		window.draw(shape);
+
+		inputHandler->handleInput(window);
+		game->Update();
+		game->Draw(window);
+
 		window.display();
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
