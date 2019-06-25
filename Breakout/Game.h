@@ -1,3 +1,4 @@
+#pragma once
 #include <list>
 #include "Actor.h"
 
@@ -8,7 +9,7 @@ public:
 
 	void AddActor(Actor* actor);
 	void Draw(sf::RenderWindow &window);
-	void Update();
+	void Update(float deltaTime);
 
 private:
 	int sizeX;

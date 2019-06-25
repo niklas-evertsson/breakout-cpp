@@ -19,11 +19,11 @@ void Game::Draw(sf::RenderWindow &window)
 	}
 }
 
-void Game::Update()
+void Game::Update(float deltaTime)
 {
 	std::list<Actor*>::iterator	it;
 	for(it = actors.begin(); it != actors.end(); it++)
 	{
-		(*it)->Update();
+		(*it)->Update(deltaTime);
 	}
 }

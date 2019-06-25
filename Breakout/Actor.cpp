@@ -11,7 +11,7 @@ void Actor::SetSprite(std::string imagePath)
 	sf::Texture texture;
 	if (!texture.loadFromFile(imagePath))
 	{
-		std::cout << "Unable to open " << imagePath;
+		std::cout << "Unable to load " << imagePath;
 	}
 	sprite.setTexture(texture);
 }
