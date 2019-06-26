@@ -8,8 +8,7 @@ public:
 
 	void Update(float deltaTime);
 
-private:
-	float radius;
-
+protected:
 	bool HitWall();
+	float radius;
 };

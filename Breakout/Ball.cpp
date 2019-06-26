@@ -40,6 +40,8 @@ bool Ball::HitWall()
 		velocity.y = -velocity.y;
 	}
 
+	SetPosition(posX, posY);
+
 	return hit;
 }
 
