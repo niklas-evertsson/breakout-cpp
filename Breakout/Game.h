@@ -5,14 +5,12 @@
 class Game
 {
 public:
-	Game(int sizeX, int sizeY);
+	Game();
 
 	void AddActor(Actor* actor);
 	void Draw(sf::RenderWindow &window);
 	void Update(float deltaTime);
 
 private:
-	int sizeX;
-	int sizeY;
 	std::list<Actor*> actors;
 };

@@ -25,27 +25,32 @@ float ElapsedTime()
 	return elapsedClock.getElapsedTime().asSeconds();
 }
 
+int GetWindowHeight()
+{
+	return window.getSize().y;
+}
+
+int GetWindowWidth()
+{
+	return window.getSize().x;
+}
+
 void Tick()
 {
 	deltaTime = deltaClock.restart().asSeconds();
 	elapsedTime = elapsedClock.getElapsedTime().asSeconds();
 }
 
-sf::RenderWindow* GetWindow()
-{
-	return &window;
-}
-
 sf::Vector2i GetResolution()
 {
-	return sf::Vector2i(sf::VideoMode().width, sf::VideoMode().height);
+	return sf::Vector2i(window.getSize());
 }
 
 void Init()
 {
-	game = new Game(windowWidth, windowHeight);
-	inputHandler = new InputHandler();
 	window.create(sf::VideoMode(windowWidth, windowHeight), title, sf::Style::Close);
+	inputHandler = new InputHandler();
+	game = new Game();
 }
 
 void Run()

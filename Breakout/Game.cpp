@@ -1,9 +1,10 @@
+#include "Ball.h"
 #include "Game.h"
 
-Game::Game(int sizeX, int sizeY):
-	sizeX(sizeX),
-	sizeY(sizeY)
-{}
+Game::Game()
+{
+	AddActor(new Ball());
+}
 
 void Game::AddActor(Actor* actor)
 {

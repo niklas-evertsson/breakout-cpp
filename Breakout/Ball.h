@@ -7,4 +7,9 @@ public:
 	Ball();
 
 	void Update(float deltaTime);
+
+private:
+	float radius;
+
+	bool HitWall();
 };
