@@ -1,16 +1,7 @@
-#include <iostream>
 #include "Actor.h"
 
-Actor::Actor(std::string imagePath)
+Actor::Actor(sf::Texture* texture, ActorType actorType)
 {
-	SetSprite(imagePath);
-}
-
-void Actor::SetSprite(std::string imagePath)
-{
-	if (!texture.loadFromFile(imagePath))
-	{
-		std::cout << "Unable to load " << imagePath;
-	}
-	sprite.setTexture(texture);
+	this->actorType = actorType;
+	sprite.setTexture(*texture);
 }

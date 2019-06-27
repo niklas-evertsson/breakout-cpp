@@ -1,9 +1,13 @@
+#include "App.h"
 #include "Ball.h"
 #include "Game.h"
+#include <iostream>
 
 Game::Game(sf::RenderWindow &window) : window(window)
 {
-	AddActor(new Ball());
+	LoadTextures();
+	Actor* ball = new Ball(&textures[ActorType::Ball], ActorType::Ball);
+	AddActor(ball);
 }
 
 float Game::DeltaTime()
@@ -18,16 +22,41 @@ float Game::ElapsedTime()
 
 void Game::AddActor(Actor* actor)
 {
+	actor->Init();
 	actors.push_back(actor);
 }
 
 void Game::CheckCollision(Actor* actor1, Actor* actor2)
 {
+	sf::FloatRect box1 = actor1->GetGlobalBounds();
+	sf::FloatRect box2 = actor2->GetGlobalBounds();
+
+	if (box1.intersects(box2))
+	{
+		actor1->OnCollision(actor2);
+		actor2->OnCollision(actor1);
+	}
 }
 
 void Game::Draw(Actor* actor)
 {
 	window.draw(*(actor)->GetSprite());
+}
+
+void Game::LoadTextures()
+{
+	std::map<ActorType, std::string>::iterator it;
+	for(it = App::texturePath.begin(); it != App::texturePath.end(); it++)
+	{
+		sf::Texture texture;
+		std::string texturePath = it->second;
+		if (!texture.loadFromFile(texturePath))
+		{
+			continue;
+		}
+		textures.insert(std::make_pair(ActorType::Ball, texture));
+	}
+
 }
 
 void Game::Tick()

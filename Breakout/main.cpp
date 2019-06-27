@@ -2,8 +2,8 @@
 
 int main()
 {
-	Init();
-	Run();
+	App::Init();
+	App::Run();
 
 	return EXIT_SUCCESS;
 }

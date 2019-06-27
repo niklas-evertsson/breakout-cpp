@@ -3,12 +3,14 @@
 
 class Ball : public Actor
 {
-public:
-	Ball();
+	using Actor::Actor;
 
+public:
+	void Init();
+	void OnCollision(Actor* other);
 	void Update(float deltaTime);
 
 protected:
-	bool HitWall();
-	float radius;
+	float radius = 0.0f;
+	void WallCollision();
 };

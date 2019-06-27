@@ -14,6 +14,7 @@ protected:
 	void AddActor(Actor* actor);
 	void CheckCollision(Actor* actor1, Actor* actor2);
 	void Draw(Actor* actor);
+	void LoadTextures();
 	void Update(Actor* actor);
 
 private:
@@ -22,5 +23,6 @@ private:
 	sf::Clock deltaClock;
 	sf::Clock elapsedClock;
 	sf::RenderWindow &window;
+	std::map<ActorType, sf::Texture> textures;
 	std::vector<Actor*> actors;
 };

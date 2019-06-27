@@ -1,39 +1,48 @@
 #include "App.h"
 #include "Game.h"
 #include "InputHandler.h"
-#include "Time.h"
 
-int windowHeight = 600;
-int windowWidth = 800;
-std::string title = "Breakout";
+namespace App
+{
+	std::map<ActorType, std::string> texturePath
+	{
+		{ ActorType::Ball, "../resources/ball32.png" },
+		{ ActorType::Brick, "" },
+		{ ActorType::Paddle, "" },
+	};
 
-sf::RenderWindow window;
-Game* game;
-InputHandler* inputHandler;
+	int windowHeight = 640;
+	int windowWidth = 800;
+	std::string title = "Breakout";
 
-int GetWindowHeight()
+	sf::RenderWindow window;
+	Game* game;
+	InputHandler* inputHandler;
+}
+
+int App::GetWindowHeight()
 {
 	return window.getSize().y;
 }
 
-int GetWindowWidth()
+int App::GetWindowWidth()
 {
 	return window.getSize().x;
 }
 
-sf::Vector2i GetResolution()
+sf::Vector2i App::GetResolution()
 {
 	return sf::Vector2i(window.getSize());
 }
 
-void Init()
+void App::Init()
 {
 	window.create(sf::VideoMode(windowWidth, windowHeight), title, sf::Style::Close);
 	inputHandler = new InputHandler();
 	game = new Game(window);
 }
 
-void Run()
+void App::Run()
 {
 	while (window.isOpen())
 	{
@@ -45,4 +54,3 @@ void Run()
 		window.display();
 	}
 }
-

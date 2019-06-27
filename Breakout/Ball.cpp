@@ -1,52 +1,77 @@
+#include "Actor.h"
 #include "App.h"
 #include "Ball.h"
+#include <iostream>
 
-Ball::Ball() : Actor("../resources/ball32.png")
+void Ball::Init()
 {
-	GetSprite()->setOrigin(GetSize() / 2.0f);
-	SetPosition((sf::Vector2f)GetResolution() / 2.0f);
-	radius = std::max(GetSize().x, GetSize().y) / 2.0f;
-	velocity = sf::Vector2f(200, 250);
+	SetOrigin(GetSize() / 2.0f);
+	SetPosition((sf::Vector2f)App::GetResolution() / 2.0f);
+	this->radius = std::max(GetSize().x, GetSize().y) / 2.0f;
+	this->velocity = sf::Vector2f(200, -100);
 }
 
-bool Ball::HitWall()
+void Ball::OnCollision(Actor* other)
 {
-	bool hit = false;
-	float posX = GetPosX();
-	float posY = GetPosY();
+	sf::Vector2f topLeft = other->GetPosition();
+	sf::Vector2f bottomRight = topLeft + other->GetSize();
 
-	if(posX - radius <= 0) // Left wall
+	if(posX + radius >= topLeft.x) // Left side
 	{
-		hit = true;
-		posX = radius;
+		posX = topLeft.x - radius;
 		velocity.x = -velocity.x;
 	}
-	else if(posX + radius >= GetWindowWidth()) // Right wall
+	else if(posX - radius <= bottomRight.x) // Right side
 	{
-		hit = true;
-		posX = GetWindowWidth() - radius;
+		posX = bottomRight.x + radius;
 		velocity.x = -velocity.x;
 	}
-	if (posY - radius <= 0) //Top wall
+
+	if (posY + radius >= topLeft.y) // Top side
 	{
-		hit = true;
-		posY = radius;
+		posY = topLeft.y - radius;
 		velocity.y = -velocity.y;
 	}
-	else if (posY + radius >= GetWindowHeight()) //Bottom wall
+	else if (posY - radius <= bottomRight.y) // Bottom side
 	{
-		hit = true;
-		posY = GetWindowHeight() - radius;
+		posY = bottomRight.y - radius;
 		velocity.y = -velocity.y;
 	}
-
-	SetPosition(posX, posY);
-
-	return hit;
 }
 
 void Ball::Update(float deltaTime)
 {
+	posX = GetPosX();
+	posY = GetPosY();
+	WallCollision();
 	Move(velocity * deltaTime);
-	HitWall();
+}
+
+
+void Ball::WallCollision()
+{
+	if (posX - radius <= 0) // Left wall
+	{
+		posX = radius;
+		velocity.x = -velocity.x;
+	}
+	else if (posX + radius >= App::GetWindowWidth()) // Right wall
+	{
+		posX = App::GetWindowWidth() - radius;
+		velocity.x = -velocity.x;
+	}
+
+	if (posY - radius <= 0) //Top wall
+	{
+		posY = radius;
+		velocity.y = -velocity.y;
+	}
+
+	else if (posY + radius >= App::GetWindowHeight()) //Bottom
+	{
+		// Destroy ball
+	}
+
+	SetPosition(posX, posY);
+
 }
