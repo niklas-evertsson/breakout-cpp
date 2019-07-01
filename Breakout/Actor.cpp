@@ -1,7 +1,14 @@
 #include "Actor.h"
+#include "Game.h"
 
-Actor::Actor(sf::Texture* texture, ActorType actorType)
+Actor::Actor(ActorType actorType)
 {
 	this->actorType = actorType;
-	sprite.setTexture(*texture);
+	sprite.setTexture(Game::GetTexture(actorType));
+}
+
+void Actor::Destroy()
+{
+	TakeDamage();
+	destroy = true;
 }

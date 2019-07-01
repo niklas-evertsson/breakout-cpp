@@ -10,6 +10,7 @@ namespace App
 	int GetWindowHeight();
 	int GetWindowWidth();
 	sf::Vector2i GetResolution();
+	std::string GetLevelPath();
 	void Init();
 	void Run();
 };

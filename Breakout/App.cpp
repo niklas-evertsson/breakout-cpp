@@ -7,17 +7,18 @@ namespace App
 	std::map<ActorType, std::string> texturePath
 	{
 		{ ActorType::Ball, "../resources/ball32.png" },
-		{ ActorType::Brick, "" },
-		{ ActorType::Paddle, "" },
+		{ ActorType::Brick, "../resources/brick64x32.png" },
+		{ ActorType::Paddle, "../resources/paddle128x32.png" },
 	};
 
-	int windowHeight = 640;
-	int windowWidth = 800;
+	int windowWidth = 1024;
+	int windowHeight = 1024;
+	std::string levelPath = "../resources/level.csv";
 	std::string title = "Breakout";
 
 	sf::RenderWindow window;
-	Game* game;
-	InputHandler* inputHandler;
+	Game game(window);
+	InputHandler inputHandler;
 }
 
 int App::GetWindowHeight()
@@ -35,11 +36,16 @@ sf::Vector2i App::GetResolution()
 	return sf::Vector2i(window.getSize());
 }
 
+std::string App::GetLevelPath()
+{
+	return levelPath;
+}
+
 void App::Init()
 {
-	window.create(sf::VideoMode(windowWidth, windowHeight), title, sf::Style::Close);
-	inputHandler = new InputHandler();
-	game = new Game(window);
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	window.create(sf::VideoMode(windowWidth, windowHeight, desktop.bitsPerPixel), title, sf::Style::Close);
+	game.Init();
 }
 
 void App::Run()
@@ -48,8 +54,8 @@ void App::Run()
 	{
 		window.clear();
 
-		inputHandler->handleInput(window);
-		game->Tick();
+		inputHandler.handleInput(window);
+		game.Tick();
 
 		window.display();
 	}
