@@ -1,6 +1,5 @@
 #include "Brick.h"
 #include "Game.h"
-#include <iostream>
 
 Brick::Brick() : Actor(ActorType::Brick) {}
 
@@ -18,17 +17,18 @@ Brick* Brick::Create(const std::string& name)
 
 ArmouredBrick::ArmouredBrick() : Brick()
 {
+	name = "ArmouredBrick";
 	SetColor(sf::Color().Yellow);
 }
 
 ExplosiveBrick::ExplosiveBrick() : Brick()
 {
+	name = "ExplosiveBrick";
 	SetColor(sf::Color().Red);
 }
 
 void ExplosiveBrick::TakeDamage()
 {
-	std::cout << "Explosive taking damage" << std::endl;
 	//sf::Vector2i index;
 	//index.x = (int)(GetPosition().x / GetSize().x);
 	//index.y = (int)(GetPosition().y / GetSize().y);
@@ -44,12 +44,12 @@ void ExplosiveBrick::TakeDamage()
 
 InvisibleBrick::InvisibleBrick() : Brick()
 {
+	name = "InvisibleBrick";
 	SetColor(sf::Color().Black);
 }
 
 void InvisibleBrick::TakeDamage()
 {
-	std::cout << "Invisible taking damage" << std::endl;
 	if (GetColor() == sf::Color().Black)
 	{
 		SetColor(visibleColor);
@@ -62,12 +62,12 @@ void InvisibleBrick::TakeDamage()
 
 MetalBrick::MetalBrick() : Brick()
 {
+	name = "MetalBrick";
 	SetColor(sf::Color().Blue);
 }
 
 void MetalBrick::TakeDamage()
 {
-	std::cout << "Metal taking damage" << std::endl;
 	sf::Color color = GetColor();
 	color.a -= alphaStep;
 	SetColor(color);
@@ -81,11 +81,11 @@ void MetalBrick::TakeDamage()
 
 NormalBrick::NormalBrick() : Brick()
 {
+	name = "NormalBrick";
 	SetColor(sf::Color().White);
 }
 
 void NormalBrick::TakeDamage()
 {
-	std::cout << "Normal taking damage" << std::endl;
 	destroy = true;
 }

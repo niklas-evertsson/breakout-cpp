@@ -23,6 +23,7 @@ public:
 	sf::Sprite* GetSprite() { return &sprite; }
 	sf::Vector2f GetPosition() { return sprite.getPosition(); }
 	sf::Vector2f GetSize() { return sf::Vector2f(sprite.getLocalBounds().width, sprite.getLocalBounds().height); }
+	std::string GetName() { return name; }
 	void Destroy();
 	void Move(sf::Vector2f deltaPosition) { sprite.move(deltaPosition); }
 	void SetColor(sf::Color color) { sprite.setColor(color); }
@@ -41,6 +42,7 @@ protected:
 	float posX = 0.0f;
 	float posY = 0.0f;
 	sf::Vector2f velocity;
+	std::string name;
 	ActorType actorType = ActorType::Unknown;
 
 private:

@@ -3,6 +3,8 @@
 #include "Ball.h"
 #include "CSVReader.h"
 #include "Game.h"
+#include "Paddle.h"
+#include <iostream>
 
 Game::Game(sf::RenderWindow& window) : window(window) {}
 
@@ -46,6 +48,14 @@ void Game::Draw(Actor* actor)
 	window.draw(*(actor)->GetSprite());
 }
 
+void Game::ExecuteCommand(Command* command)
+{
+	if(command)
+	{
+		command->Execute(paddle);
+	}
+}
+
 void Game::GenerateLevel()
 {
 	sf::Vector2i index;
@@ -82,6 +92,8 @@ void Game::Init()
 {
 	LoadTextures();
 	GenerateLevel();
+	paddle = new Paddle();
+	AddActor(paddle);
 	Actor* ball = new Ball();
 	AddActor(ball);
 }
@@ -115,6 +127,7 @@ void Game::Tick()
 		Draw(*it1);
 		if ((*it1)->GetDestroy())
 		{
+			delete* it1;
 			it1 = actors.erase(it1);
 			it1--;
 		}

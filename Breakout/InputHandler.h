@@ -1,8 +1,16 @@
 #pragma once
+#include "Command.h"
 
 class InputHandler
 {
 public:
-	static void handleInput(sf::Window& window);
+	InputHandler();
+	static sf::Vector2f mousePosition;
+	Command* HandleInput(sf::Window& window);
+
+private:
+	Command* pause = 0;
+	Command* start = 0;
+	Command* mouseX = 0;
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Command.h"
 
 class Game
 {
@@ -8,6 +9,7 @@ public:
 	static sf::Texture& GetTexture(ActorType actorType);
 	static Actor* GetBrickAtPosition(int x, int y) { return bricks[x][y]; }
 	static Actor* GetBrickAtPosition(sf::Vector2i position) { return bricks[position.x][position.y]; }
+	void ExecuteCommand(Command* command);
 	void Init();
 	void Tick();
 
@@ -29,4 +31,5 @@ private:
 	std::vector<Actor*> actors;
 	static std::map<ActorType, sf::Texture> textures;
 	static std::vector<std::vector<Actor*>> bricks;
+	Actor* paddle = 0;
 };

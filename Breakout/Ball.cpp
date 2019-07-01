@@ -4,6 +4,7 @@
 
 Ball::Ball() : Actor(ActorType::Ball)
 {
+	name = "Ball";
 	SetColor(sf::Color().White);
 	SetOrigin(GetSize() / 2.0f);
 	sf::Vector2f startPosition = (sf::Vector2f)App::GetResolution() / 2.0f;

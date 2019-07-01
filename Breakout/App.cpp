@@ -54,7 +54,8 @@ void App::Run()
 	{
 		window.clear();
 
-		inputHandler.handleInput(window);
+		Command* command = inputHandler.HandleInput(window);
+		game.ExecuteCommand(command);
 		game.Tick();
 
 		window.display();
