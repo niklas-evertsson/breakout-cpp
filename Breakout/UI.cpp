@@ -8,19 +8,19 @@ UI::UI(sf::RenderWindow& window) : window(window)
 	gameOverText.setFont(font);
 	gameOverText.setCharacterSize(gameOverTextSize);
 
+	instructionsText.setFont(font);
+	instructionsText.setCharacterSize(startTextSize);
+	instructionsText.setFillColor(sf::Color::White);
+
 	scoreText.setFont(font);
-	scoreText.setCharacterSize(21);
+	scoreText.setCharacterSize(scoreTextSize);
 	scoreText.setString(scoreString);
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setPosition(scorePadding, scorePadding);
 
 	startText.setFont(font);
 	startText.setCharacterSize(startTextSize);
-	startText.setString(startString);
 	startText.setFillColor(sf::Color::White);
-	sf::FloatRect textRect = startText.getLocalBounds();
-	startText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
-	startText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f + 100.0f);
 
 	texture.loadFromFile(App::GetHeartPath());
 	playerLife.setTexture(texture);
@@ -29,29 +29,62 @@ UI::UI(sf::RenderWindow& window) : window(window)
 
 void UI::Draw()
 {
+	sf::FloatRect textRect;
+
 	DrawLives();
 	DrawScore();
 
 	if (GameData::GetState() == GameState::waitingForStart || GameData::GetState() == GameState::betweenGames)
 	{
+		startText.setString(startString);
+		textRect = startText.getLocalBounds();
+		startText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		startText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f + 100.0f);
 		window.draw(startText);
+	}
+
+	if(GameData::GetState() == GameState::waitingForStart)
+	{
+		instructionsText.setString(controlsString);
+		textRect = instructionsText.getLocalBounds();
+		instructionsText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		instructionsText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f + 100.0f + textRect.height * 2 + startPadding);
+		window.draw(instructionsText);
+
+		instructionsText.setString(normalBlockDescription);
+		textRect = instructionsText.getLocalBounds();
+		instructionsText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		instructionsText.setPosition((float)App::GetResolution().x * 0.5f, instructionsText.getPosition().y + textRect.height * 2 + startPadding);
+		window.draw(instructionsText);
+
+		instructionsText.setString(metalBlockDescription);
+		textRect = instructionsText.getLocalBounds();
+		instructionsText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		instructionsText.setPosition((float)App::GetResolution().x * 0.5f, instructionsText.getPosition().y + textRect.height + startPadding);
+		window.draw(instructionsText);
+
+		instructionsText.setString(explosiveBlockDescription);
+		textRect = instructionsText.getLocalBounds();
+		instructionsText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		instructionsText.setPosition((float)App::GetResolution().x * 0.5f, instructionsText.getPosition().y + textRect.height + startPadding);
+		window.draw(instructionsText);
 	}
 	else if (GameData::GetState() == GameState::endGame)
 	{
 		gameOverText.setFillColor(endGameColor);
 		gameOverText.setString(endGameString);
-		sf::FloatRect textRect = gameOverText.getLocalBounds();
+		textRect = gameOverText.getLocalBounds();
 		gameOverText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
-		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f - 100.0f);
+		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, 100.0f);
 		window.draw(gameOverText);
 	}
 	else if(GameData::GetState() == GameState::gameOver)
 	{
 		gameOverText.setFillColor(gameOverColor);
 		gameOverText.setString(gameOverString);
-		sf::FloatRect textRect = gameOverText.getLocalBounds();
+		textRect = gameOverText.getLocalBounds();
 		gameOverText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
-		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f - 100.0f);
+		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, 100.0f);
 		window.draw(gameOverText);
 	}
 }

@@ -2,7 +2,6 @@
 #include "Command.h"
 #include "GameData.h"
 #include "InputHandler.h"
-#include <iostream>
 
 Command::Command(InputHandler* inputHandler)
 {

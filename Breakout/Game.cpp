@@ -231,13 +231,13 @@ void Game::Update(Actor* actor)
 	actor->Update(deltaTime, elapsedTime);
 }
 
-Actor* Game::GetBrickAtPosition(int x, int y)
+Actor* Game::GetBrickAtPosition(int col, int row)
 {
-	if (x < (int)bricks.capacity())
+	if (row > 0 && row < (int)bricks.capacity())
 	{
-		if (y < (int)bricks[y].capacity())
+		if (col > 0 && col < (int)bricks[row].capacity())
 		{
-			return bricks[y][x];
+			return bricks[row][col];
 		}
 	}
 	return NULL;

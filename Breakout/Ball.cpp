@@ -1,7 +1,6 @@
 #include "Actor.h"
 #include "App.h"
 #include "Ball.h"
-#include <iostream>
 
 Ball::Ball() : Actor(ActorType::Ball)
 {
@@ -12,7 +11,7 @@ Ball::Ball() : Actor(ActorType::Ball)
 	startPosition.y += 50;
 	SetPosition(startPosition);
 	this->radius = std::max(GetSize().x, GetSize().y) * 0.5f;
-	this->velocity = sf::Vector2f(150, -550);
+	this->velocity = sf::Vector2f(100, 500);
 }
 
 void Ball::DamageActor(Actor& actor)
@@ -54,10 +53,10 @@ void Ball::OnCollision(Actor& other)
 	{
 		float paddleHalfSize = other.GetSize().x * 0.5f;
 		float paddleCenter = other.GetPosition().x + paddleHalfSize;
-		float collisionPoint = (posX - paddleCenter) / paddleHalfSize;
+		float collisionPoint = fmin((posX - paddleCenter) / paddleHalfSize, 0.9f);
 		float totalVelocity = sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 		velocity.x = totalVelocity * collisionPoint;
-		velocity.y = -sqrt(totalVelocity * totalVelocity - velocity.x * velocity.x);
+		velocity.y = -sqrt(abs(totalVelocity * totalVelocity - velocity.x * velocity.x));
 	}
 }
 
@@ -99,7 +98,7 @@ void Ball::WallCollision()
 	}
 	else if (posY - radius >= App::GetWindowHeight()) //Bottom
 	{
-		Destroy();
+		destroy = true;
 	}
 
 	SetPosition(posX, posY);

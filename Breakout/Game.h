@@ -8,7 +8,7 @@ class Game
 public:
 	Game(sf::RenderWindow &window);
 	static sf::Texture& GetTexture(ActorType actorType);
-	static Actor* GetBrickAtPosition(int x, int y);
+	static Actor* GetBrickAtPosition(int col, int row);
 	void ExecuteCommand(Command* command);
 	void Init();
 	void Tick();
