@@ -3,6 +3,7 @@
 #include "Ball.h"
 #include "CSVReader.h"
 #include "Game.h"
+#include "GameData.h"
 #include "Paddle.h"
 #include <iostream>
 
@@ -31,21 +32,52 @@ void Game::AddActor(Actor* actor)
 	actors.push_back(actor);
 }
 
-void Game::CheckCollision(Actor* actor1, Actor* actor2)
+void Game::CheckCollision()
 {
-	sf::FloatRect box1 = actor1->GetGlobalBounds();
-	sf::FloatRect box2 = actor2->GetGlobalBounds();
-
-	if (box1.intersects(box2))
+	std::vector<Actor*>::iterator it1;
+	std::vector<Actor*>::iterator it2;
+	for (it1 = actors.begin(); it1 != actors.end(); it1++)
 	{
-		actor1->OnCollision(*actor2);
-		actor2->OnCollision(*actor1);
+		for (it2 = actors.begin(); it2 < it1; it2++)
+		{
+			if (!*it1)
+			{
+				continue;
+			}
+			if (!*it2)
+			{
+				continue;
+			}
+			sf::FloatRect box1 = (*it1)->GetGlobalBounds();
+			sf::FloatRect box2 = (*it2)->GetGlobalBounds();
+
+			if (box1.intersects(box2))
+			{
+				(*it1)->OnCollision(**it2);
+				(*it2)->OnCollision(**it1);
+			}
+		}
 	}
 }
 
-void Game::Draw(Actor* actor)
+void Game::ClearActors()
 {
-	window.draw(*(actor)->GetSprite());
+	std::vector<Actor*>::iterator it;
+	for(it = actors.begin(); it != actors.end(); it++)
+	{
+		delete* it;
+		*it = 0;
+	}
+	actors.clear();
+}
+
+void Game::Draw()
+{
+	std::vector<Actor*>::iterator it;
+	for(it = actors.begin(); it != actors.end(); it++)
+	{
+		window.draw(*(*it)->GetSprite());
+	}
 }
 
 void Game::ExecuteCommand(Command* command)
@@ -54,6 +86,11 @@ void Game::ExecuteCommand(Command* command)
 	{
 		command->Execute(paddle);
 	}
+}
+
+void Game::GameOver()
+{
+	GameData::SetState(GameState::waitingForStart);
 }
 
 void Game::GenerateLevel()
@@ -90,12 +127,9 @@ void Game::GenerateLevel()
 
 void Game::Init()
 {
+	ui = new UI(window);
 	LoadTextures();
-	GenerateLevel();
-	paddle = new Paddle();
-	AddActor(paddle);
-	Actor* ball = new Ball();
-	AddActor(ball);
+	NewGame();
 }
 
 void Game::LoadTextures()
@@ -111,30 +145,74 @@ void Game::LoadTextures()
 		}
 		textures.insert(std::make_pair(it->first, texture));
 	}
+}
 
+void Game::LosePlayerLife()
+{
+	PlayerData::LoseLife();
+	if (PlayerData::GetLives() <= 0)
+	{
+		GameOver();
+	}
+	else
+	{
+		GameData::SetState(GameState::betweenGames);
+		Actor* ball = new Ball();
+		AddActor(ball);
+	}
+}
+
+void Game::NewGame()
+{
+	ClearActors();
+	GenerateLevel();
+	paddle = new Paddle();
+	AddActor(paddle);
+	Actor* ball = new Ball();
+	AddActor(ball);
 }
 
 void Game::Tick()
 {
+	std::cout << GameData::GetState() << std::endl;
 	deltaTime = DeltaTime();
 	elapsedTime = ElapsedTime();
-
-	std::vector<Actor*>::iterator it1;
-	std::vector<Actor*>::iterator it2;
-	for(it1 = actors.begin(); it1 != actors.end(); it1++)
+	if (GameData::GetState() == GameState::starting)
 	{
-		(*it1)->Update(deltaTime);
-		Draw(*it1);
-		if ((*it1)->GetDestroy())
+		PlayerData::ResetLives();
+		NewGame();
+		GameData::SetState(GameState::playing);
+	}
+	if (GameData::GetState() == GameState::playing)
+	{
+		CheckCollision();
+		std::vector<Actor*>::iterator it;
+		bool ballInPlay = false;
+		for(it = actors.begin(); it != actors.end(); it++)
 		{
-			delete* it1;
-			it1 = actors.erase(it1);
-			it1--;
-		}
+			if ((*it)->GetType() == ActorType::Ball)
+			{
+				ballInPlay = true;
+			}
+			Update(*it);
 
-		for(it2 = actors.begin(); it2 < it1; it2++)
+			if ((*it)->GetDestroy())
+			{
+				delete *it;
+				it = actors.erase(it);
+				it--;
+			}
+		}
+		if (!ballInPlay)
 		{
-			CheckCollision(*it1, *it2);
+			LosePlayerLife();
 		}
 	}
+	Draw();
+	ui->Draw();
+}
+
+void Game::Update(Actor* actor)
+{
+	actor->Update(deltaTime);
 }

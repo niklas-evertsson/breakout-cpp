@@ -144,10 +144,13 @@
     <ClCompile Include="BrickFactory.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CSVReader.cpp" />
+    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="PlayerData.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -157,9 +160,12 @@
     <ClInclude Include="BrickFactory.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CSVReader.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="PlayerData.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

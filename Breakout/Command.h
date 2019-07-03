@@ -18,3 +18,10 @@ public:
 	MoveXCommand(InputHandler* inputHandler);
 	virtual void Execute(Actor* actor);
 };
+
+class StartCommand : public Command
+{
+public:
+	StartCommand(InputHandler* inputHandler);
+	virtual void Execute(Actor* actor);
+};

@@ -6,12 +6,12 @@ Ball::Ball() : Actor(ActorType::Ball)
 {
 	name = "Ball";
 	SetColor(sf::Color().White);
-	SetOrigin(GetSize() / 2.0f);
-	sf::Vector2f startPosition = (sf::Vector2f)App::GetResolution() / 2.0f;
+	SetOrigin(GetSize() * 0.5f);
+	sf::Vector2f startPosition = (sf::Vector2f)App::GetResolution() * 0.5f;
 	startPosition.y += 50;
 	SetPosition(startPosition);
-	this->radius = std::max(GetSize().x, GetSize().y) / 2.0f;
-	this->velocity = sf::Vector2f(200, -100);
+	this->radius = std::max(GetSize().x, GetSize().y) * 0.5f;
+	this->velocity = sf::Vector2f(200, -600);
 }
 
 void Ball::OnCollision(Actor& other)
@@ -21,27 +21,33 @@ void Ball::OnCollision(Actor& other)
 
 	if(posX + radius >= topLeft.x) // Left side
 	{
-		posX = topLeft.x - radius;
 		velocity.x = -velocity.x;
 		other.TakeDamage();
 	}
-	else if(posX - radius <= bottomRight.x) // Right side
+	if(posX - radius <= bottomRight.x) // Right side
 	{
-		posX = bottomRight.x + radius;
 		velocity.x = -velocity.x;
 		other.TakeDamage();
 	}
-	else if (posY + radius >= topLeft.y) // Top side
+	if (posY + radius >= topLeft.y) // Top side
 	{
-		posY = topLeft.y - radius;
 		velocity.y = -velocity.y;
 		other.TakeDamage();
 	}
-	else if (posY - radius <= bottomRight.y) // Bottom side
+	if (posY - radius <= bottomRight.y) // Bottom side
 	{
-		posY = bottomRight.y - radius;
 		velocity.y = -velocity.y;
 		other.TakeDamage();
+	}
+
+	if (other.GetType() == ActorType::Paddle)
+	{
+		float paddleHalfSize = other.GetSize().x * 0.5f;
+		float paddleCenter = other.GetPosition().x + paddleHalfSize;
+		float collisionPoint = (posX - paddleCenter) / paddleHalfSize;
+		float totalVelocity = sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+		velocity.x = totalVelocity * collisionPoint;
+		velocity.y = -sqrt(totalVelocity * totalVelocity - velocity.x * velocity.x);
 	}
 }
 
@@ -72,12 +78,10 @@ void Ball::WallCollision()
 		posY = radius;
 		velocity.y = -velocity.y;
 	}
-
-	else if (posY + radius >= App::GetWindowHeight()) //Bottom
+	else if (posY - radius >= App::GetWindowHeight()) //Bottom
 	{
-		// Destroy ball
+		Destroy();
 	}
 
 	SetPosition(posX, posY);
-
 }

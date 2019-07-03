@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "Command.h"
+#include "UI.h"
 
 class Game
 {
@@ -17,10 +18,17 @@ protected:
 	float DeltaTime();
 	float ElapsedTime();
 	void AddActor(Actor* actor);
-	void CheckCollision(Actor* actor1, Actor* actor2);
-	void Draw(Actor* actor);
+	void CheckCollision();
+	void ClearActors();
+	void Draw();
+	void GameOver();
 	void GenerateLevel();
 	void LoadTextures();
+	void LosePlayerLife();
+	void NewGame();
+	void Update(Actor* actor);
+	Actor* paddle = 0;
+	UI* ui = 0;
 
 private:
 	float deltaTime = 0.0f;
@@ -31,5 +39,4 @@ private:
 	std::vector<Actor*> actors;
 	static std::map<ActorType, sf::Texture> textures;
 	static std::vector<std::vector<Actor*>> bricks;
-	Actor* paddle = 0;
 };

@@ -1,9 +1,10 @@
-#include <SFML/Graphics.hpp>
 #include "InputHandler.h"
+#include <SFML/Graphics.hpp>
 
 InputHandler::InputHandler()
 {
 	mouseX = new MoveXCommand(this);
+	start = new StartCommand(this);
 }
 
 sf::Vector2f InputHandler::mousePosition;
@@ -16,30 +17,17 @@ Command* InputHandler::HandleInput(sf::Window &window)
 	Command* command = NULL;
 	while (window.pollEvent(event))
 	{
-		switch (event.type)
+		if (event.type == sf::Event::Closed)
 		{
-		case sf::Event::Closed:
 			window.close();
-			break;
-		case sf::Event::GainedFocus:
-			command = start;
-			break;
-		case sf::Event::KeyPressed:
-			switch (event.key.code)
+		}
+		else if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::Space)
 			{
-			case sf::Keyboard::Space:
-				command = start;
-				break;
-			default:
-				break;
+				return start;
 			}
-		case sf::Event::LostFocus:
-			command = pause;
-			break;
-		default:
-			command = mouseX;
-			break;
 		}
 	}
-	return command;
+	return mouseX;
 }

@@ -9,8 +9,7 @@ public:
 	Command* HandleInput(sf::Window& window);
 
 private:
-	Command* pause = 0;
-	Command* start = 0;
 	Command* mouseX = 0;
+	Command* start = 0;
 };
 

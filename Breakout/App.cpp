@@ -6,13 +6,15 @@ namespace App
 {
 	std::map<ActorType, std::string> texturePath
 	{
-		{ ActorType::Ball, "../resources/ball32.png" },
+		{ ActorType::Ball, "../resources/ball16.png" },
 		{ ActorType::Brick, "../resources/brick64x32.png" },
 		{ ActorType::Paddle, "../resources/paddle128x32.png" },
 	};
 
 	int windowWidth = 1024;
 	int windowHeight = 1024;
+	std::string fontPath = "../resources/pressstart2p.ttf";
+	std::string heartPath = "../resources/heart32.png";
 	std::string levelPath = "../resources/level.csv";
 	std::string title = "Breakout";
 
@@ -34,6 +36,16 @@ int App::GetWindowWidth()
 sf::Vector2i App::GetResolution()
 {
 	return sf::Vector2i(window.getSize());
+}
+
+std::string App::GetFontPath()
+{
+	return fontPath;
+}
+
+std::string App::GetHeartPath()
+{
+	return heartPath;
 }
 
 std::string App::GetLevelPath()
