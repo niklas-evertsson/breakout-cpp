@@ -21,12 +21,21 @@ StartCommand::StartCommand(InputHandler* inputHandler) : Command(inputHandler) {
 
 void StartCommand::Execute(Actor* actor)
 {
-	if (GameData::GetState() == waitingForStart)
+	switch (GameData::GetState())
 	{
+	case GameState::waitingForStart:
 		GameData::SetState(GameState::starting);
-	}
-	if (GameData::GetState() == betweenGames)
-	{
+		break;
+	case GameState::betweenGames:
 		GameData::SetState(GameState::playing);
+		break;
+	case GameState::gameOver:
+		GameData::SetState(GameState::waitingForStart);
+		break;
+	case GameState::endGame:
+		GameData::SetState(GameState::waitingForStart);
+		break;
+	default:
+		break;
 	}
 }

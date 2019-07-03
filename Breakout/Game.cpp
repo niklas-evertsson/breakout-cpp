@@ -5,7 +5,6 @@
 #include "Game.h"
 #include "GameData.h"
 #include "Paddle.h"
-#include <iostream>
 
 Game::Game(sf::RenderWindow& window) : window(window) {}
 
@@ -80,6 +79,11 @@ void Game::Draw()
 	}
 }
 
+void Game::EndGame()
+{
+	GameData::SetState(GameState::endGame);
+}
+
 void Game::ExecuteCommand(Command* command)
 {
 	if(command)
@@ -90,7 +94,7 @@ void Game::ExecuteCommand(Command* command)
 
 void Game::GameOver()
 {
-	GameData::SetState(GameState::waitingForStart);
+	GameData::SetState(GameState::gameOver);
 }
 
 void Game::GenerateLevel()
@@ -164,6 +168,7 @@ void Game::LosePlayerLife()
 
 void Game::NewGame()
 {
+	GameData::ResetScore();
 	ClearActors();
 	GenerateLevel();
 	paddle = new Paddle();
@@ -174,7 +179,6 @@ void Game::NewGame()
 
 void Game::Tick()
 {
-	std::cout << GameData::GetState() << std::endl;
 	deltaTime = DeltaTime();
 	elapsedTime = ElapsedTime();
 	if (GameData::GetState() == GameState::starting)
@@ -188,12 +192,18 @@ void Game::Tick()
 		CheckCollision();
 		std::vector<Actor*>::iterator it;
 		bool ballInPlay = false;
+		int bricksLeft = 0;
 		for(it = actors.begin(); it != actors.end(); it++)
 		{
-			if ((*it)->GetType() == ActorType::Ball)
+			if ((*it)->GetType() == ActorType::Brick)
+			{
+				bricksLeft++;
+			}
+			else if ((*it)->GetType() == ActorType::Ball)
 			{
 				ballInPlay = true;
 			}
+
 			Update(*it);
 
 			if ((*it)->GetDestroy())
@@ -207,6 +217,10 @@ void Game::Tick()
 		{
 			LosePlayerLife();
 		}
+		if (bricksLeft <= 0)
+		{
+			EndGame();
+		}
 	}
 	Draw();
 	ui->Draw();
@@ -214,5 +228,17 @@ void Game::Tick()
 
 void Game::Update(Actor* actor)
 {
-	actor->Update(deltaTime);
+	actor->Update(deltaTime, elapsedTime);
+}
+
+Actor* Game::GetBrickAtPosition(int x, int y)
+{
+	if (x < (int)bricks.capacity())
+	{
+		if (y < (int)bricks[y].capacity())
+		{
+			return bricks[y][x];
+		}
+	}
+	return NULL;
 }

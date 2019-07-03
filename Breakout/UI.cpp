@@ -6,16 +6,19 @@ UI::UI(sf::RenderWindow& window) : window(window)
 {
 	font.loadFromFile(App::GetFontPath());
 	gameOverText.setFont(font);
-	gameOverText.setString("GAME OVER");
-	gameOverText.setFillColor(sf::Color::Red);
-	sf::FloatRect textRect = gameOverText.getLocalBounds();
-	gameOverText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
-	gameOverText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f - 100.0f);
+	gameOverText.setCharacterSize(gameOverTextSize);
+
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(21);
+	scoreText.setString(scoreString);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(scorePadding, scorePadding);
 
 	startText.setFont(font);
-	startText.setString("PRESS START TO PLAY");
+	startText.setCharacterSize(startTextSize);
+	startText.setString(startString);
 	startText.setFillColor(sf::Color::White);
-	textRect = startText.getLocalBounds();
+	sf::FloatRect textRect = startText.getLocalBounds();
 	startText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
 	startText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f + 100.0f);
 
@@ -26,21 +29,47 @@ UI::UI(sf::RenderWindow& window) : window(window)
 
 void UI::Draw()
 {
+	DrawLives();
+	DrawScore();
+
 	if (GameData::GetState() == GameState::waitingForStart || GameData::GetState() == GameState::betweenGames)
 	{
 		window.draw(startText);
 	}
+	else if (GameData::GetState() == GameState::endGame)
+	{
+		gameOverText.setFillColor(endGameColor);
+		gameOverText.setString(endGameString);
+		sf::FloatRect textRect = gameOverText.getLocalBounds();
+		gameOverText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f - 100.0f);
+		window.draw(gameOverText);
+	}
+	else if(GameData::GetState() == GameState::gameOver)
+	{
+		gameOverText.setFillColor(gameOverColor);
+		gameOverText.setString(gameOverString);
+		sf::FloatRect textRect = gameOverText.getLocalBounds();
+		gameOverText.setOrigin(textRect.left + textRect.width * 0.5f, textRect.top);
+		gameOverText.setPosition((float)App::GetResolution().x * 0.5f, App::GetResolution().y * 0.5f - 100.0f);
+		window.draw(gameOverText);
+	}
+}
 
-	sf::Vector2f position(0.0f, 0.0f);
+void UI::DrawLives()
+{
+	float spriteWidth = playerLife.getLocalBounds().width;
+	sf::Vector2f position(App::GetWindowWidth() - spriteWidth - lifePadding, lifePadding);
 	for(int i = 0; i < PlayerData::GetLives(); i++)
 	{
 		playerLife.setPosition(position);
 		window.draw(playerLife);
-		position.x += playerLife.getGlobalBounds().width + lifePadding;
+		position.x -= spriteWidth + lifePadding;
 	}
+}
 
-	if (PlayerData::GetLives() <= 0)
-	{
-		window.draw(gameOverText);
-	}
+void UI::DrawScore()
+{
+	scoreText.setString(scoreString + std::to_string(GameData::GetScore()));
+	window.draw(scoreText);
 }

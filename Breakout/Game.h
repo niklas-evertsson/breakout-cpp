@@ -8,8 +8,7 @@ class Game
 public:
 	Game(sf::RenderWindow &window);
 	static sf::Texture& GetTexture(ActorType actorType);
-	static Actor* GetBrickAtPosition(int x, int y) { return bricks[x][y]; }
-	static Actor* GetBrickAtPosition(sf::Vector2i position) { return bricks[position.x][position.y]; }
+	static Actor* GetBrickAtPosition(int x, int y);
 	void ExecuteCommand(Command* command);
 	void Init();
 	void Tick();
@@ -21,6 +20,7 @@ protected:
 	void CheckCollision();
 	void ClearActors();
 	void Draw();
+	void EndGame();
 	void GameOver();
 	void GenerateLevel();
 	void LoadTextures();

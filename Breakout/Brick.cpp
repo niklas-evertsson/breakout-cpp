@@ -15,12 +15,6 @@ Brick* Brick::Create(const std::string& name)
 	return factories[name]->Create();
 }
 
-ArmouredBrick::ArmouredBrick() : Brick()
-{
-	name = "ArmouredBrick";
-	SetColor(sf::Color().Yellow);
-}
-
 ExplosiveBrick::ExplosiveBrick() : Brick()
 {
 	name = "ExplosiveBrick";
@@ -29,52 +23,50 @@ ExplosiveBrick::ExplosiveBrick() : Brick()
 
 void ExplosiveBrick::TakeDamage()
 {
-	//sf::Vector2i index;
-	//index.x = (int)(GetPosition().x / GetSize().x);
-	//index.y = (int)(GetPosition().y / GetSize().y);
-	//Game::GetBrickAtPosition(index.x, index.y - 1)->Destroy(); // Top
-	//Game::GetBrickAtPosition(index.x, index.y + 1)->Destroy(); // Bottom
-	//Game::GetBrickAtPosition(index.x - 1, index.y - 1)->Destroy(); // Top left
-	//Game::GetBrickAtPosition(index.x - 1, index.y)->Destroy(); // Left
-	//Game::GetBrickAtPosition(index.x - 1, index.y + 1)->Destroy(); // Bottom left
-	//Game::GetBrickAtPosition(index.x + 1, index.y - 1)->Destroy(); // Top left
-	//Game::GetBrickAtPosition(index.x + 1, index.y)->Destroy(); // Left
-	//Game::GetBrickAtPosition(index.x + 1, index.y + 1)->Destroy(); // Bottom left
-}
-
-InvisibleBrick::InvisibleBrick() : Brick()
-{
-	name = "InvisibleBrick";
-	SetColor(sf::Color().Black);
-}
-
-void InvisibleBrick::TakeDamage()
-{
-	if (GetColor() == sf::Color().Black)
+	if (!destroy)
 	{
-		SetColor(visibleColor);
-	}
-	else
-	{
+		GameData::AddScore(brickScore);
 		destroy = true;
+		sf::Vector2i index;
+		index.x = (int)(GetPosition().x / GetSize().x);
+		index.y = (int)(GetPosition().y / GetSize().y);
+		std::vector<Actor*> bricks;
+		bricks.push_back(Game::GetBrickAtPosition(index.x, index.y + 1)); // Bottom
+		bricks.push_back(Game::GetBrickAtPosition(index.x - 1, index.y)); // Left
+		bricks.push_back(Game::GetBrickAtPosition(index.x + 1, index.y)); // Right
+		bricks.push_back(Game::GetBrickAtPosition(index.x, index.y - 1)); // Top
+		bricks.push_back(Game::GetBrickAtPosition(index.x - 1, index.y + 1)); // Bottom left
+		bricks.push_back(Game::GetBrickAtPosition(index.x + 1, index.y + 1)); // Bottom right
+		bricks.push_back(Game::GetBrickAtPosition(index.x - 1, index.y - 1)); // Top left
+		bricks.push_back(Game::GetBrickAtPosition(index.x + 1, index.y - 1)); // Top right
+		std::vector<Actor*>::iterator it;
+		for (it = bricks.begin(); it != bricks.end(); it++)
+		{
+			if (*it != NULL)
+			{
+				(*it)->Destroy();
+				GameData::AddScore((int)(brickScore * 0.5f));
+			}
+		}
 	}
 }
 
 MetalBrick::MetalBrick() : Brick()
 {
 	name = "MetalBrick";
-	SetColor(sf::Color().Blue);
+	SetColor(sf::Color(255, 160, 0));
 }
 
 void MetalBrick::TakeDamage()
 {
 	sf::Color color = GetColor();
-	color.a -= alphaStep;
+	color.a -= alphaStep > 0 ? alphaStep : 0;
 	SetColor(color);
 
 	health--;
 	if (health <= 0)
 	{
+		GameData::AddScore(brickScore * 2);
 		destroy = true;
 	}
 }
@@ -82,10 +74,11 @@ void MetalBrick::TakeDamage()
 NormalBrick::NormalBrick() : Brick()
 {
 	name = "NormalBrick";
-	SetColor(sf::Color().White);
+	SetColor(sf::Color().Yellow);
 }
 
 void NormalBrick::TakeDamage()
 {
+	GameData::AddScore(brickScore);
 	destroy = true;
 }

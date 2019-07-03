@@ -5,12 +5,17 @@ enum GameState
 	waitingForStart,
 	starting,
 	playing,
-	betweenGames
+	betweenGames,
+	gameOver,
+	endGame
 };
 
 namespace GameData
 {
-	GameState GetState();
+	int GetScore();
+	void AddScore(int score);
+	void ResetScore();
 	void SetState(GameState newState);
+	GameState GetState();
 };
 

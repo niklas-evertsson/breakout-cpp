@@ -7,24 +7,10 @@ public:
 	virtual Brick* Create() = 0;
 };
 
-class ArmouredBrickFactory : BrickFactory
-{
-public:
-	ArmouredBrickFactory();
-	Brick* Create();
-};
-
 class ExplosiveBrickFactory : BrickFactory
 {
 public:
 	ExplosiveBrickFactory();
-	Brick* Create();
-};
-
-class InvisibleBrickFactory : BrickFactory
-{
-public:
-	InvisibleBrickFactory();
 	Brick* Create();
 };
 

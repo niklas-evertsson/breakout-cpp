@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include "App.h"
 #include "Ball.h"
+#include <iostream>
 
 Ball::Ball() : Actor(ActorType::Ball)
 {
@@ -11,7 +12,16 @@ Ball::Ball() : Actor(ActorType::Ball)
 	startPosition.y += 50;
 	SetPosition(startPosition);
 	this->radius = std::max(GetSize().x, GetSize().y) * 0.5f;
-	this->velocity = sf::Vector2f(200, -600);
+	this->velocity = sf::Vector2f(150, -550);
+}
+
+void Ball::DamageActor(Actor& actor)
+{
+	if (damageState == DamageState::ready)
+	{
+		actor.TakeDamage();
+		damageState = DamageState::startCooldown;
+	}
 }
 
 void Ball::OnCollision(Actor& other)
@@ -22,22 +32,22 @@ void Ball::OnCollision(Actor& other)
 	if(posX + radius >= topLeft.x) // Left side
 	{
 		velocity.x = -velocity.x;
-		other.TakeDamage();
+		DamageActor(other);
 	}
 	if(posX - radius <= bottomRight.x) // Right side
 	{
 		velocity.x = -velocity.x;
-		other.TakeDamage();
+		DamageActor(other);
 	}
 	if (posY + radius >= topLeft.y) // Top side
 	{
 		velocity.y = -velocity.y;
-		other.TakeDamage();
+		DamageActor(other);
 	}
 	if (posY - radius <= bottomRight.y) // Bottom side
 	{
 		velocity.y = -velocity.y;
-		other.TakeDamage();
+		DamageActor(other);
 	}
 
 	if (other.GetType() == ActorType::Paddle)
@@ -51,8 +61,17 @@ void Ball::OnCollision(Actor& other)
 	}
 }
 
-void Ball::Update(float deltaTime)
+void Ball::Update(float deltaTime, float elapsedTime)
 {
+	if (damageState == DamageState::startCooldown)
+	{
+		nextDamageTime = elapsedTime + damageCooldownTime;
+		damageState = DamageState::isCoolingDown;
+	}
+	else if (nextDamageTime > elapsedTime)
+	{
+		damageState = DamageState::ready;
+	}
 	posX = GetPosX();
 	posY = GetPosY();
 	WallCollision();

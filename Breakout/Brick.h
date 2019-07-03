@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "BrickFactory.h"
+#include "GameData.h"
 
 class Brick : public Actor
 {
@@ -9,14 +10,11 @@ public:
 	static void RegisterFactoryType(const std::string& name, BrickFactory* factory);
 	static Brick* Create(const std::string& name);
 
+protected:
+	int brickScore = 50;
+
 private:
 	static std::map<std::string, BrickFactory*> factories;
-};
-
-class ArmouredBrick : public Brick
-{
-public:
-	ArmouredBrick();
 };
 
 class ExplosiveBrick : public Brick
@@ -26,16 +24,6 @@ public:
 	void TakeDamage();
 };
 
-class InvisibleBrick : public Brick
-{
-public:
-	InvisibleBrick();
-	void TakeDamage();
-
-private:
-	sf::Color visibleColor = sf::Color().Magenta;
-};
-
 class MetalBrick : public Brick
 {
 public:
@@ -43,7 +31,7 @@ public:
 	void TakeDamage();
 
 private:
-	int health = 3;
+	int health = 2;
 	int alphaStep = 255 / health;
 };
 
@@ -52,4 +40,5 @@ class NormalBrick : public Brick
 public:
 	NormalBrick();
 	void TakeDamage();
+	void Destroy() { GameData::AddScore(brickScore); }
 };

@@ -35,7 +35,7 @@ public:
 
 	virtual void TakeDamage() {};
 	virtual void OnCollision(Actor& other) {}
-	virtual void Update(float deltaTime) {}
+	virtual void Update(float deltaTime, float elapsedTime) {}
 
 protected:
 	bool destroy = false;
