@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include "App.h"
 #include "Ball.h"
+#include <math.h>
 
 Ball::Ball() : Actor(ActorType::Ball)
 {
