@@ -1,0 +1,20 @@
+{
+    "folders":
+    [
+        {
+            "path": "resources"
+        },
+        {
+            "path": "src"
+        }
+    ],
+
+    "build_systems":
+    [
+        {
+            "name": "SFML",
+            "working_dir": "${project_path}",
+            "cmd": ["./compileSFML.sh", "-lsfml-system", "-lsfml-window", "-lsfml-graphics"]
+        }
+    ]
+}
